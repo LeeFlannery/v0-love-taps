@@ -26,6 +26,7 @@ export function LoveTaps() {
     totalWeeksCompleted,
     showCelebration,
     dismissCelebration,
+    resetWeeklyGoal,
   } = useAchievements(tasks)
 
   const completedCount = tasks.filter((t) => t.completed).length
@@ -46,6 +47,8 @@ export function LoveTaps() {
 
       <div className="max-w-lg mx-auto px-4 pb-12">
         <Header />
+
+        <LoveBlobs taskCount={completedCount} goalMet={goalMet} />
 
         <TaskForm onAddTask={addTask} />
 
@@ -77,13 +80,20 @@ export function LoveTaps() {
           )}
         </div>
 
-        <LoveBlobs taskCount={completedCount} goalMet={goalMet} />
-
         {hasTasks && (
-          <p className="text-center text-sm text-muted-foreground mt-4 font-medium">
+          <p className="text-center text-sm text-muted-foreground mt-10 font-medium">
             {"Made with love for you & yours"}
           </p>
         )}
+
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={resetWeeklyGoal}
+            className="text-xs text-muted-foreground/40 hover:text-muted-foreground/70 active:text-muted-foreground transition-colors py-2 px-3"
+          >
+            reset weekly goal
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -69,6 +69,17 @@ export function useAchievements(tasks: Task[]) {
     setShowCelebration(false)
   }, [])
 
+  const resetWeeklyGoal = useCallback(() => {
+    const newState: AchievementState = {
+      weeklyGoalMet: false,
+      lastCelebrated: null,
+      totalWeeksCompleted: achievement.totalWeeksCompleted,
+    }
+    setAchievement(newState)
+    saveAchievements(newState)
+    setShowCelebration(false)
+  }, [achievement.totalWeeksCompleted])
+
   return {
     goalMet,
     loveCount,
@@ -78,5 +89,6 @@ export function useAchievements(tasks: Task[]) {
     totalWeeksCompleted: achievement.totalWeeksCompleted,
     showCelebration,
     dismissCelebration,
+    resetWeeklyGoal,
   }
 }
