@@ -3,6 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useCallback } from "react"
 
+let globalParticleId = 0
+
 interface Particle {
   id: number
   x: number
@@ -19,9 +21,9 @@ const COLORS = [
   "#fb923c", "#f472b6",
 ]
 
-function createBurst(cx: number, cy: number, startId: number): Particle[] {
+function createBurst(cx: number, cy: number): Particle[] {
   return Array.from({ length: 18 }, (_, i) => ({
-    id: startId + i,
+    id: ++globalParticleId,
     x: cx,
     y: cy,
     color: COLORS[Math.floor(Math.random() * COLORS.length)],
@@ -35,8 +37,6 @@ export function Fireworks({ show, onDone }: { show: boolean; onDone: () => void 
   const [particles, setParticles] = useState<Particle[]>([])
 
   const launchFireworks = useCallback(() => {
-    const bursts: Particle[] = []
-    let id = 0
     const positions = [
       { x: 25, y: 30 },
       { x: 75, y: 25 },
@@ -48,11 +48,10 @@ export function Fireworks({ show, onDone }: { show: boolean; onDone: () => void 
       setTimeout(() => {
         setParticles((prev) => [
           ...prev,
-          ...createBurst(pos.x, pos.y, id + bIdx * 18),
+          ...createBurst(pos.x, pos.y),
         ])
       }, bIdx * 350)
     })
-    id += positions.length * 18
     setTimeout(() => {
       setParticles([])
       onDone()
