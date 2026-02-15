@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 
 const encouragements = [
   "You two are crushing it!",
@@ -14,6 +14,26 @@ const encouragements = [
   "Sparks are flying!",
   "Goals? You ARE the goal!",
   "Relationship level: expert!",
+  "Did it just get hot in here?",
+  "Somebody call the fire department!",
+  "You make love look easy!",
+  "That's ADORABLE and you know it!",
+  "Tag team champions of love!",
+  "Get a room! ...after chores tho.",
+  "My heart can't take you two!",
+  "Netflix and... productivity!",
+  "Love isn't dead, it's RIGHT HERE!",
+  "Main character couple energy!",
+  "Swipe right on EACH OTHER again!",
+  "The love meter is OFF THE CHARTS!",
+  "Doing chores together = foreplay.",
+  "You smell great. Both of you.",
+  "Plot twist: you're soulmates!",
+  "*fans self dramatically*",
+  "Excuse me, is this a rom-com?",
+  "OK this is disgustingly cute.",
+  "Hallmark wants to option your story!",
+  "BRB, writing a love song about you.",
 ]
 
 const celebrationMessages = [
@@ -24,21 +44,50 @@ const celebrationMessages = [
   "You two are UNSTOPPABLE!",
 ]
 
+const surpriseTapMessages = [
+  "FIREWORKS! NOW KISS!",
+  "SURPRISE! Pucker up, buttercup!",
+  "BOOM! That earns a SMOOCH!",
+  "Fireworks for LOVE! Kiss time!",
+  "The blobs demand a KISS!",
+  "Ka-BOOM! Mandatory lip lock!",
+]
+
 interface LoveBlobsProps {
   taskCount: number
   goalMet: boolean
+  onFireworks: () => void
+  onAddKiss: () => void
 }
 
-export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
+export function LoveBlobs({ taskCount, goalMet, onFireworks, onAddKiss }: LoveBlobsProps) {
   const [message, setMessage] = useState("")
   const [showMessage, setShowMessage] = useState(false)
   const [lastTaskCount, setLastTaskCount] = useState(taskCount)
+  const tapCountRef = useRef(0)
+  const nextSurpriseRef = useRef(3 + Math.floor(Math.random() * 5))
+  const messageTimerRef = useRef<ReturnType<typeof setTimeout>>()
 
   const triggerMessage = useCallback((msgs: string[]) => {
+    if (messageTimerRef.current) clearTimeout(messageTimerRef.current)
     setMessage(msgs[Math.floor(Math.random() * msgs.length)])
     setShowMessage(true)
-    setTimeout(() => setShowMessage(false), 3500)
+    messageTimerRef.current = setTimeout(() => setShowMessage(false), 3500)
   }, [])
+
+  const handleTap = useCallback(() => {
+    tapCountRef.current += 1
+
+    if (tapCountRef.current >= nextSurpriseRef.current) {
+      tapCountRef.current = 0
+      nextSurpriseRef.current = 5 + Math.floor(Math.random() * 8)
+      triggerMessage(surpriseTapMessages)
+      onFireworks()
+      onAddKiss()
+    } else {
+      triggerMessage(encouragements)
+    }
+  }, [triggerMessage, onFireworks, onAddKiss])
 
   useEffect(() => {
     if (taskCount > lastTaskCount) {
@@ -63,7 +112,7 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
             animate={{ opacity: 1, y: -8, scale: 1 }}
             exit={{ opacity: 0, y: 5, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 bg-card border border-border rounded-2xl px-4 py-2 shadow-lg max-w-[240px]"
+            className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 bg-card border border-border rounded-2xl px-4 py-2 shadow-lg max-w-[260px]"
           >
             <p className="text-xs font-bold text-foreground text-center leading-snug">{message}</p>
             <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-card border-b border-r border-border rotate-45" />
@@ -74,7 +123,8 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
       {/* Blob 1 - Pink one */}
       <motion.div
         className="relative cursor-pointer"
-        onClick={() => triggerMessage(encouragements)}
+        onClick={handleTap}
+        whileTap={{ scale: 0.9 }}
         animate={{
           y: [0, -6, 0],
         }}
@@ -96,16 +146,12 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
             animate={{ ry: [22, 20, 22], rx: [26, 28, 26] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* Eyes */}
           <ellipse cx="24" cy="32" rx="3" ry="3.5" fill="#831843" />
           <ellipse cx="40" cy="32" rx="3" ry="3.5" fill="#831843" />
-          {/* Eye shine */}
           <circle cx="25" cy="31" r="1" fill="white" />
           <circle cx="41" cy="31" r="1" fill="white" />
-          {/* Blush */}
           <ellipse cx="18" cy="38" rx="4" ry="2.5" fill="#fda4af" opacity="0.6" />
           <ellipse cx="46" cy="38" rx="4" ry="2.5" fill="#fda4af" opacity="0.6" />
-          {/* Smile */}
           <path
             d="M26 40 Q32 46 38 40"
             stroke="#831843"
@@ -114,7 +160,6 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
             strokeLinecap="round"
           />
         </motion.svg>
-        {/* Heart above */}
         <motion.div
           className="absolute -top-2 -right-1"
           animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
@@ -144,7 +189,8 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
       {/* Blob 2 - Rose one */}
       <motion.div
         className="relative cursor-pointer"
-        onClick={() => triggerMessage(encouragements)}
+        onClick={handleTap}
+        whileTap={{ scale: 0.9 }}
         animate={{
           y: [0, -6, 0],
         }}
@@ -166,16 +212,12 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
             animate={{ ry: [20, 18, 20], rx: [23, 25, 23] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
           />
-          {/* Eyes */}
           <ellipse cx="22" cy="30" rx="2.5" ry="3" fill="#881337" />
           <ellipse cx="36" cy="30" rx="2.5" ry="3" fill="#881337" />
-          {/* Eye shine */}
           <circle cx="23" cy="29" r="1" fill="white" />
           <circle cx="37" cy="29" r="1" fill="white" />
-          {/* Blush */}
           <ellipse cx="16" cy="35" rx="3.5" ry="2" fill="#fecdd3" opacity="0.6" />
           <ellipse cx="42" cy="35" rx="3.5" ry="2" fill="#fecdd3" opacity="0.6" />
-          {/* Smile */}
           <path
             d="M23 37 Q29 42 35 37"
             stroke="#881337"
@@ -184,7 +226,6 @@ export function LoveBlobs({ taskCount, goalMet }: LoveBlobsProps) {
             strokeLinecap="round"
           />
         </motion.svg>
-        {/* Star sparkle */}
         <motion.div
           className="absolute -top-1 -left-1"
           animate={{ rotate: [0, 180, 360], scale: [0.8, 1.2, 0.8] }}

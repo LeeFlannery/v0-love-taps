@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useCallback } from "react"
 import { useTasks } from "@/hooks/use-tasks"
 import { useAchievements } from "@/hooks/use-achievements"
 import { Header } from "./header"
@@ -30,6 +31,19 @@ export function LoveTaps() {
   } = useAchievements(tasks)
 
   const completedCount = tasks.filter((t) => t.completed).length
+  const [blobFireworks, setBlobFireworks] = useState(false)
+
+  const handleBlobFireworks = useCallback(() => {
+    setBlobFireworks(true)
+  }, [])
+
+  const handleBlobFireworksDone = useCallback(() => {
+    setBlobFireworks(false)
+  }, [])
+
+  const handleAddKiss = useCallback(() => {
+    addTask("MANDATORY KISS!", "love")
+  }, [addTask])
 
   if (!isLoaded) {
     return (
@@ -44,11 +58,17 @@ export function LoveTaps() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-200 via-rose-100 to-pink-50">
       <Fireworks show={showCelebration} onDone={dismissCelebration} />
+      <Fireworks show={blobFireworks} onDone={handleBlobFireworksDone} />
 
       <div className="max-w-lg mx-auto px-4 pb-12">
         <Header />
 
-        <LoveBlobs taskCount={completedCount} goalMet={goalMet} />
+        <LoveBlobs
+          taskCount={completedCount}
+          goalMet={goalMet}
+          onFireworks={handleBlobFireworks}
+          onAddKiss={handleAddKiss}
+        />
 
         <TaskForm onAddTask={addTask} />
 
@@ -81,8 +101,18 @@ export function LoveTaps() {
         </div>
 
         {hasTasks && (
-          <p className="text-center text-sm text-muted-foreground mt-10 font-medium">
+          <p className="text-center text-sm text-muted-foreground mt-10 font-medium leading-relaxed">
             {"Made with love for you & yours"}
+            <br />
+            {"by "}
+            <a
+              href="https://leeflannery.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-primary transition-colors"
+            >
+              Lee Flannery
+            </a>
           </p>
         )}
 

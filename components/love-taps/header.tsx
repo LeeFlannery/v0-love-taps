@@ -5,13 +5,13 @@ import { Heart } from "lucide-react"
 
 export function Header() {
   return (
-    <header className="relative py-8 text-center overflow-hidden">
+    <header className="relative py-8 text-center">
       <motion.div
-        className="absolute inset-0 flex items-center justify-center opacity-5"
-        animate={{ scale: [1, 1.1, 1] }}
+        className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none"
+        animate={{ scale: [1, 1.08, 1] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <Heart className="w-64 h-64 text-primary fill-primary" />
+        <Heart className="w-48 h-48 text-primary fill-primary" />
       </motion.div>
 
       <motion.div
