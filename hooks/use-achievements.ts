@@ -9,6 +9,7 @@ interface AchievementState {
   weeklyGoalMet: boolean
   lastCelebrated: number | null
   totalWeeksCompleted: number
+  resetAt: number | null
 }
 
 function getStartOfWeek(): number {
@@ -21,15 +22,15 @@ function getStartOfWeek(): number {
 }
 
 function loadAchievements(): AchievementState {
-  if (typeof window === "undefined")
-    return { weeklyGoalMet: false, lastCelebrated: null, totalWeeksCompleted: 0 }
+  const defaultState: AchievementState = { weeklyGoalMet: false, lastCelebrated: null, totalWeeksCompleted: 0, resetAt: null }
+  if (typeof window === "undefined") return defaultState
   try {
     const stored = localStorage.getItem(ACHIEVEMENT_KEY)
-    return stored
-      ? JSON.parse(stored)
-      : { weeklyGoalMet: false, lastCelebrated: null, totalWeeksCompleted: 0 }
+    if (!stored) return defaultState
+    const parsed = JSON.parse(stored)
+    return { ...defaultState, ...parsed }
   } catch {
-    return { weeklyGoalMet: false, lastCelebrated: null, totalWeeksCompleted: 0 }
+    return defaultState
   }
 }
 
@@ -44,8 +45,12 @@ export function useAchievements(tasks: Task[]) {
 
   const weekStart = getStartOfWeek()
 
+  const cutoff = achievement.resetAt && achievement.resetAt > weekStart
+    ? achievement.resetAt
+    : weekStart
+
   const completedThisWeek = tasks.filter(
-    (t) => t.completed && t.createdAt >= weekStart
+    (t) => t.completed && t.createdAt >= cutoff
   )
   const loveCount = completedThisWeek.filter((t) => t.category === "love").length
   const houseworkCount = completedThisWeek.filter((t) => t.category === "housework").length
@@ -53,7 +58,7 @@ export function useAchievements(tasks: Task[]) {
   const goalMet = loveCount >= 3 && houseworkCount >= 1
 
   useEffect(() => {
-    if (goalMet && (!achievement.lastCelebrated || achievement.lastCelebrated < weekStart)) {
+    if (goalMet && (!achievement.lastCelebrated || achievement.lastCelebrated < cutoff)) {
       const newState: AchievementState = {
         weeklyGoalMet: true,
         lastCelebrated: Date.now(),
@@ -63,7 +68,7 @@ export function useAchievements(tasks: Task[]) {
       saveAchievements(newState)
       setShowCelebration(true)
     }
-  }, [goalMet, achievement.lastCelebrated, achievement.totalWeeksCompleted, weekStart])
+  }, [goalMet, achievement.lastCelebrated, achievement.totalWeeksCompleted, cutoff])
 
   const dismissCelebration = useCallback(() => {
     setShowCelebration(false)
@@ -74,6 +79,7 @@ export function useAchievements(tasks: Task[]) {
       weeklyGoalMet: false,
       lastCelebrated: null,
       totalWeeksCompleted: achievement.totalWeeksCompleted,
+      resetAt: Date.now(),
     }
     setAchievement(newState)
     saveAchievements(newState)
