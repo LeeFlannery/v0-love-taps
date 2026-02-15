@@ -1,17 +1,49 @@
 "use client"
 
+import { useState, useCallback } from "react"
 import { useTasks } from "@/hooks/use-tasks"
+import { useAchievements } from "@/hooks/use-achievements"
 import { Header } from "./header"
 import { TaskForm } from "./task-form"
 import { CategorySection } from "./category-section"
 import { EmptyState } from "./empty-state"
+import { AchievementBadge } from "./achievement-badge"
+import { Fireworks } from "./fireworks"
+import { LoveBlobs } from "./love-blobs"
 import type { TaskCategory } from "@/lib/types"
 
 const categoryOrder: TaskCategory[] = ["love", "housework", "busytime"]
 
 export function LoveTaps() {
-  const { tasks, isLoaded, addTask, toggleTask, deleteTask, getTasksByCategory } =
+  const { tasks, isLoaded, addTask, toggleTask, deleteTask, clearAllTasks, getTasksByCategory } =
     useTasks()
+
+  const {
+    goalMet,
+    loveCount,
+    houseworkCount,
+    loveTarget,
+    houseworkTarget,
+    totalWeeksCompleted,
+    showCelebration,
+    dismissCelebration,
+    resetWeeklyGoal,
+  } = useAchievements(tasks)
+
+  const completedCount = tasks.filter((t) => t.completed).length
+  const [blobFireworks, setBlobFireworks] = useState(false)
+
+  const handleBlobFireworks = useCallback(() => {
+    setBlobFireworks(true)
+  }, [])
+
+  const handleBlobFireworksDone = useCallback(() => {
+    setBlobFireworks(false)
+  }, [])
+
+  const handleAddKiss = useCallback(() => {
+    addTask("MANDATORY KISS!", "love")
+  }, [addTask])
 
   if (!isLoaded) {
     return (
@@ -25,12 +57,31 @@ export function LoveTaps() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-200 via-rose-100 to-pink-50">
+      <Fireworks show={showCelebration} onDone={dismissCelebration} />
+      <Fireworks show={blobFireworks} onDone={handleBlobFireworksDone} />
+
       <div className="max-w-lg mx-auto px-4 pb-12">
         <Header />
 
+        <LoveBlobs
+          taskCount={completedCount}
+          goalMet={goalMet}
+          onFireworks={handleBlobFireworks}
+          onAddKiss={handleAddKiss}
+        />
+
         <TaskForm onAddTask={addTask} />
 
-        <div className="mt-8 flex flex-col gap-8">
+        <AchievementBadge
+          goalMet={goalMet}
+          loveCount={loveCount}
+          loveTarget={loveTarget}
+          houseworkCount={houseworkCount}
+          houseworkTarget={houseworkTarget}
+          totalWeeksCompleted={totalWeeksCompleted}
+        />
+
+        <div className="mt-6 flex flex-col gap-8">
           {hasTasks ? (
             categoryOrder.map((cat) => {
               const catTasks = getTasksByCategory(cat)
@@ -50,10 +101,35 @@ export function LoveTaps() {
         </div>
 
         {hasTasks && (
-          <p className="text-center text-sm text-muted-foreground mt-10 font-medium">
+          <p className="text-center text-sm text-muted-foreground mt-10 font-medium leading-relaxed">
             {"Made with love for you & yours"}
+            <br />
+            {"by "}
+            <a
+              href="https://leeflannery.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-primary transition-colors"
+            >
+              Lee Flannery
+            </a>
           </p>
         )}
+
+        <div className="mt-8 flex flex-col items-center gap-1">
+          <button
+            onClick={resetWeeklyGoal}
+            className="text-xs text-muted-foreground/40 hover:text-muted-foreground/70 active:text-muted-foreground transition-colors py-2 px-3"
+          >
+            reset weekly goal
+          </button>
+          <button
+            onClick={clearAllTasks}
+            className="text-xs text-muted-foreground/40 hover:text-muted-foreground/70 active:text-destructive transition-colors py-2 px-3"
+          >
+            clear all tasks
+          </button>
+        </div>
       </div>
     </div>
   )
