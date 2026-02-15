@@ -68,13 +68,13 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
           className="overflow-hidden"
         >
           <div className="pt-4 flex flex-col gap-3">
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               {categoryOptions.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setCategory(opt.value)}
-                  className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 rounded-xl text-sm font-semibold transition-all ${
+                  className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
                     category === opt.value
                       ? opt.value === "housework"
                         ? "bg-pink-100 text-pink-700 border-2 border-pink-300"
@@ -84,14 +84,14 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
                       : "bg-secondary text-muted-foreground border-2 border-transparent"
                   }`}
                 >
-                  <span className="flex items-center gap-1.5">
-                    {opt.icon}
-                    {opt.label}
-                  </span>
-                  <span className={`text-[11px] font-medium leading-tight ${
-                    category === opt.value ? "opacity-80" : "opacity-50"
-                  }`}>
-                    {opt.desc}
+                  <span className="flex-shrink-0">{opt.icon}</span>
+                  <span className="flex flex-col items-start">
+                    <span className="text-sm font-bold">{opt.label}</span>
+                    <span className={`text-xs font-medium leading-tight ${
+                      category === opt.value ? "opacity-80" : "opacity-50"
+                    }`}>
+                      {opt.desc}
+                    </span>
                   </span>
                 </button>
               ))}
