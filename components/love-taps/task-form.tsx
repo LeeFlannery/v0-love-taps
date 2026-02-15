@@ -5,10 +5,10 @@ import { motion } from "framer-motion"
 import { Plus, Heart, Sparkles, Flame, BriefcaseBusiness } from "lucide-react"
 import type { TaskCategory } from "@/lib/types"
 
-const categoryOptions: { value: TaskCategory; label: string; icon: React.ReactNode }[] = [
-  { value: "housework", label: "Honey-Do", icon: <Sparkles className="w-4 h-4" /> },
-  { value: "love", label: "Oh Baby", icon: <Flame className="w-4 h-4" /> },
-  { value: "busytime", label: "Busy Boy", icon: <BriefcaseBusiness className="w-4 h-4" /> },
+const categoryOptions: { value: TaskCategory; label: string; desc: string; icon: React.ReactNode }[] = [
+  { value: "housework", label: "Honey-Do", desc: "Chores & errands", icon: <Sparkles className="w-4 h-4" /> },
+  { value: "love", label: "Oh Baby", desc: "Romance & sweet stuff", icon: <Flame className="w-4 h-4" /> },
+  { value: "busytime", label: "Busy Boy", desc: "Work & appointments", icon: <BriefcaseBusiness className="w-4 h-4" /> },
 ]
 
 interface TaskFormProps {
@@ -74,7 +74,7 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
                   key={opt.value}
                   type="button"
                   onClick={() => setCategory(opt.value)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-sm font-semibold transition-all ${
+                  className={`flex-1 flex flex-col items-center gap-1 py-3 px-2 rounded-xl text-sm font-semibold transition-all ${
                     category === opt.value
                       ? opt.value === "housework"
                         ? "bg-pink-100 text-pink-700 border-2 border-pink-300"
@@ -84,8 +84,15 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
                       : "bg-secondary text-muted-foreground border-2 border-transparent"
                   }`}
                 >
-                  {opt.icon}
-                  <span className="hidden xs:inline">{opt.label}</span>
+                  <span className="flex items-center gap-1.5">
+                    {opt.icon}
+                    {opt.label}
+                  </span>
+                  <span className={`text-[11px] font-medium leading-tight ${
+                    category === opt.value ? "opacity-80" : "opacity-50"
+                  }`}>
+                    {opt.desc}
+                  </span>
                 </button>
               ))}
             </div>
