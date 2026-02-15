@@ -6,9 +6,9 @@ import { Plus, Home, Heart, Calendar } from "lucide-react"
 import type { TaskCategory } from "@/lib/types"
 
 const categoryOptions: { value: TaskCategory; label: string; icon: React.ReactNode }[] = [
-  { value: "housework", label: "Housework", icon: <Home className="w-4 h-4" /> },
-  { value: "love", label: "Love Tasks", icon: <Heart className="w-4 h-4" /> },
-  { value: "busytime", label: "Busy Time", icon: <Calendar className="w-4 h-4" /> },
+  { value: "housework", label: "Honey-Do", icon: <Home className="w-4 h-4" /> },
+  { value: "love", label: "Oh Baby", icon: <Heart className="w-4 h-4" /> },
+  { value: "busytime", label: "Busy Boy", icon: <Calendar className="w-4 h-4" /> },
 ]
 
 interface TaskFormProps {

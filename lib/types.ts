@@ -13,19 +13,19 @@ export const CATEGORIES: Record<
   { label: string; color: string; bgColor: string; borderColor: string }
 > = {
   housework: {
-    label: "Housework",
+    label: "Honey-Do List",
     color: "text-pink-600",
     bgColor: "bg-pink-50",
     borderColor: "border-pink-200",
   },
   love: {
-    label: "Love Tasks",
+    label: "Oh Baby List",
     color: "text-rose-600",
     bgColor: "bg-rose-50",
     borderColor: "border-rose-200",
   },
   busytime: {
-    label: "Busy Time",
+    label: "Busy Boy List",
     color: "text-amber-600",
     bgColor: "bg-amber-50",
     borderColor: "border-amber-200",

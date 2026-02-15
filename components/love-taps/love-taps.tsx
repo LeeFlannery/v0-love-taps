@@ -24,7 +24,7 @@ export function LoveTaps() {
   const hasTasks = tasks.length > 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 via-rose-50/50 to-background">
+    <div className="min-h-screen bg-gradient-to-b from-pink-200 via-rose-100 to-pink-50">
       <div className="max-w-lg mx-auto px-4 pb-12">
         <Header />
 
