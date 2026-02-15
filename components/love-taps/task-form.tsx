@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Plus, Home, Heart, Calendar } from "lucide-react"
+import { Plus, Heart, Sparkles, Flame, BriefcaseBusiness } from "lucide-react"
 import type { TaskCategory } from "@/lib/types"
 
-const categoryOptions: { value: TaskCategory; label: string; icon: React.ReactNode }[] = [
-  { value: "housework", label: "Honey-Do", icon: <Home className="w-4 h-4" /> },
-  { value: "love", label: "Oh Baby", icon: <Heart className="w-4 h-4" /> },
-  { value: "busytime", label: "Busy Boy", icon: <Calendar className="w-4 h-4" /> },
+const categoryOptions: { value: TaskCategory; label: string; desc: string; icon: React.ReactNode }[] = [
+  { value: "housework", label: "Honey-Do", desc: "Chores & errands", icon: <Sparkles className="w-4 h-4" /> },
+  { value: "love", label: "Oh Baby", desc: "Romance & sweet stuff", icon: <Flame className="w-4 h-4" /> },
+  { value: "busytime", label: "Busy Boy", desc: "Work & appointments", icon: <BriefcaseBusiness className="w-4 h-4" /> },
 ]
 
 interface TaskFormProps {
@@ -68,13 +68,13 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
           className="overflow-hidden"
         >
           <div className="pt-4 flex flex-col gap-3">
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               {categoryOptions.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setCategory(opt.value)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-sm font-semibold transition-all ${
+                  className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-semibold transition-all ${
                     category === opt.value
                       ? opt.value === "housework"
                         ? "bg-pink-100 text-pink-700 border-2 border-pink-300"
@@ -84,8 +84,15 @@ export function TaskForm({ onAddTask }: TaskFormProps) {
                       : "bg-secondary text-muted-foreground border-2 border-transparent"
                   }`}
                 >
-                  {opt.icon}
-                  <span className="hidden xs:inline">{opt.label}</span>
+                  <span className="flex-shrink-0">{opt.icon}</span>
+                  <span className="flex flex-col items-start">
+                    <span className="text-sm font-bold">{opt.label}</span>
+                    <span className={`text-xs font-medium leading-tight ${
+                      category === opt.value ? "opacity-80" : "opacity-50"
+                    }`}>
+                      {opt.desc}
+                    </span>
+                  </span>
                 </button>
               ))}
             </div>
