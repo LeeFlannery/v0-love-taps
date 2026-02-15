@@ -58,6 +58,10 @@ export function useTasks() {
     setTasks((prev) => prev.filter((task) => task.id !== id))
   }, [])
 
+  const clearAllTasks = useCallback(() => {
+    setTasks([])
+  }, [])
+
   const getTasksByCategory = useCallback(
     (category: TaskCategory) => {
       return tasks.filter((task) => task.category === category)
@@ -65,5 +69,5 @@ export function useTasks() {
     [tasks]
   )
 
-  return { tasks, isLoaded, addTask, toggleTask, deleteTask, getTasksByCategory }
+  return { tasks, isLoaded, addTask, toggleTask, deleteTask, clearAllTasks, getTasksByCategory }
 }

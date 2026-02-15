@@ -14,7 +14,7 @@ import type { TaskCategory } from "@/lib/types"
 const categoryOrder: TaskCategory[] = ["love", "housework", "busytime"]
 
 export function LoveTaps() {
-  const { tasks, isLoaded, addTask, toggleTask, deleteTask, getTasksByCategory } =
+  const { tasks, isLoaded, addTask, toggleTask, deleteTask, clearAllTasks, getTasksByCategory } =
     useTasks()
 
   const {
@@ -86,12 +86,18 @@ export function LoveTaps() {
           </p>
         )}
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-col items-center gap-1">
           <button
             onClick={resetWeeklyGoal}
             className="text-xs text-muted-foreground/40 hover:text-muted-foreground/70 active:text-muted-foreground transition-colors py-2 px-3"
           >
             reset weekly goal
+          </button>
+          <button
+            onClick={clearAllTasks}
+            className="text-xs text-muted-foreground/40 hover:text-muted-foreground/70 active:text-destructive transition-colors py-2 px-3"
+          >
+            clear all tasks
           </button>
         </div>
       </div>
