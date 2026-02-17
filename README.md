@@ -8,6 +8,8 @@ A romantic shared task manager for couples, built with Next.js 16, Tailwind CSS,
 
 ## What Is This?
 
+Local storage only UI demo for now.
+
 Love Taps turns boring to-do lists into something couples actually *want* to use. Tasks are organized into three themed lists:
 
 - **Honey-Do List** -- Chores & errands (sparkles icon)
