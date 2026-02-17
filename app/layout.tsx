@@ -15,6 +15,9 @@ const _dancingScript = Dancing_Script({
 export const metadata: Metadata = {
   title: 'Love Taps - Shared Task Manager for Couples',
   description: 'A romantic shared task manager to keep love organized and fun.',
+  icons: {
+    icon: '/favicon.jpg',
+  },
 }
 
 export const viewport: Viewport = {
